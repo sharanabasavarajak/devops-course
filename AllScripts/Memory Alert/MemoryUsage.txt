@@ -1,0 +1,34 @@
+#!/bin/bash
+###############################################################################
+# Title            :Monitoring System Resources Usage
+# Script Name      : SystemResourcesUsage-1.sh
+# Description      : MemoryUsage
+# Created on       : Sep20 2019
+# Created by       :Sarada
+##################################################################
+Logfile_Path=/apps/sclc/logs/Memory.log
+ShFile_Path=/apps/sclc/filewatcher/SystemResourcesUsage-1.sh
+#EMail notification alert
+mailsubject="Dev-Server-Monitoring"
+mailfrom="dl-coins-prod-IT@anthem.com"
+mailto="dl-sclc-coins-it@anthem.com"
+#mailto="Bypineni.Sarada@anthem.com"
+## get total free memory size in gigabytes(GB)
+free=$(free -h | grep Mem | awk '{print $4}' | sed 's/G//g' )
+DiskSpace=`df  -h /apps/ | grep apps | awk '{print $4}' | sed 's/G//g'`
+
+## check if free memory is less or equals to  10GB
+if [[ "$free" -le 10  ]]; then
+        ## get top processes consuming system memory and save to temporary file
+        ps -eo pid,ppid,cmd,%mem,%cpu --sort=-%mem | head > $Logfile_Path
+
+        file=/apps/sclc/logs/Memory.log
+        ## send email if system memory is running low
+        echo -e "Warning, server memory is running low!\n\nFree memory: $free GB" | mail -r $mailfrom -s $mailsubject $mailto <<EOF
+Available free Memory : $free GB
+if [ $DiskSpace -le 10 ]; then
+echo -e  "Disk Space running low!. Available DiskSpace : $DiskSpace GB \n"
+fi	
+EOF
+fi
+exit 0

@@ -1,0 +1,42 @@
+#!/bin/bash
+###############################################################################
+# Title            :Monitoring System Resources Usage
+# Script Name      : SystemResourcesUsage-1.sh
+# Description      : MemoryUsage
+# Created on       : Sep20 2019
+# Created by       :Sarada
+# Updated By       : Sharan on 24 Oct 2019
+##################################################################
+Logfile_Path=/apps/sclc/logs/Memory.log
+ShFile_Path=/apps/sclc/shellscripts/SystemResourcesUsage-1.sh
+#EMail notification alert
+mailsubject="QA-va33tlvjre327-Server-Monitoring"
+mailfrom="dl-coins-prod-IT@anthem.com"
+mailto="dl-sclc-coins-it@anthem.com"
+#mailto="Bypineni.Sarada@anthem.com"
+## get total free memory size in gigabytes(GB)
+#free=$(free -g | grep Mem | awk '{print $4}' | sed 's/G//g' )
+free=$(free | grep Mem | awk '{print $4}')
+freeGB=`printf %.4f $(echo " $free/1024000 " | bc -l)`
+DiskSpace_b=`df /apps/ | grep apps | awk '{print $4}' | sed 's/G//g'`
+DiskSpace=`printf %.4f $(echo " $DiskSpace_b/1024000 " | bc -l)`
+JavaThreads=`ps -eLf  | grep -i java | wc -l`
+#echo $freeGB
+#echo $DiskSpace
+#echo $JavaThreads
+## check if free memory is less or equals to  10GB
+if [ $(echo "$freeGB <= 10" |bc -l) -eq 1 -o $(echo "$DiskSpace <= 10" |bc -l) -eq 1 -o $(echo "$JavaThreads > 7000" |bc -l) -eq 1 ]; then
+        ## get top processes consuming system memory and save to temporary file
+        ps -eo pid,ppid,cmd,%mem,%cpu --sort=-%mem | head > $Logfile_Path
+
+        file=/apps/sclc/logs/Memory.log
+        ## send email if system memory is running low
+        echo -e "Warning, server memory is running low!\n\nFree memory: $freeGB GB" | mail -r $mailfrom -s $mailsubject $mailto <<EOF
+Hey All,
+
+Available free Memory           : $freeGB GB
+Available DiskSpace             : $DiskSpace GB
+Number of Java Threads Running  : $JavaThreads
+EOF
+fi
+exit 0

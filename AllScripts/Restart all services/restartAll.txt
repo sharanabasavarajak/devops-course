@@ -1,0 +1,64 @@
+
+member/
+cms/
+/
+blcs/
+itconfig/
+configserver/
+listener  -- other two ports
+
+
+/
+/
+/
+/
+/
+/
+/
+/
+/
+/
+/
+/
+/
+
+
+"producerdetails")
+                     find_My_Region "${1}" "${2}" "runProducerDetails" "9091" ;
+                     ;;
+"producerbrms")
+                     find_My_Region "${1}" "${2}" "runProducerBrms" "9102" ;
+                     ;;
+"producerlistener")
+                     find_My_Region "${1}" "${2}" "runProducerListener" "9103" ;
+                     ;;
+"producerload")
+                     find_My_Region "${1}" "${2}" "runProducerLoad" "9099" ;
+                     ;;
+"producereligibility")
+                     find_My_Region "${1}" "${2}" "runProducerEligibility" "9095" ;
+                     ;;
+"producerlicense")
+                     find_My_Region "${1}" "${2}" "runProducerLicense" "9092" ;
+                     ;;
+"producermisc")
+                     find_My_Region "${1}" "${2}" "runProducerMisc" "9097" ;
+                     ;;
+"producerrelationship")
+                     find_My_Region "${1}" "${2}" "runProducerRelationship" "9096" ;
+                     ;;
+"producerdemographic")
+                     find_My_Region "${1}" "${2}" "runProducerDemographic" "9094" ;
+                     ;;
+"producercontract")
+                     find_My_Region "${1}" "${2}" "runProducerContract" "9098" ;
+                     ;;
+"producerappointment")
+                     find_My_Region "${1}" "${2}" "runProducerAppointment" "9093" ;
+                     ;;
+"producerunappointed")
+                     find_My_Region "${1}" "${2}" "runProducerUnappointed" "9101" ;
+                     ;;
+
+
+
